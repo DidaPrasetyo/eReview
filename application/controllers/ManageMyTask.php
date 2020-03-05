@@ -6,9 +6,7 @@ class ManageMyTask extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('Task');
-		$this->load->model('Reviewer');
-		$this->load->model('Payment');
+		$this->load->model(array('Task','Reviewer','Payment'));
 	}
 
 	public function index()
@@ -46,7 +44,13 @@ class ManageMyTask extends CI_Controller {
 	public function selectPotentialReviewer($id_task=-1)
 	{
 		$thetask = $this->Task->getTheTask($id_task);
-		$this->load->view('editor/selectPotentialReviewer', array('task' => $thetask[0]));
+		$reviewers = $this->Reviewer->getAllReviewers();
+		$this->load->view('editor/selectPotentialReviewer',
+			array(
+				'task' => $thetask[0],
+				'reviewers' => $reviewers
+			)
+		);
 	}
 
 	public function commitPayment()
