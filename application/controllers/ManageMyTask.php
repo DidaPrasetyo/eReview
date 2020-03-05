@@ -10,16 +10,19 @@ class ManageMyTask extends CI_Controller {
 		$this->load->model('Reviewer');
 		$this->load->model('Payment');
 	}
+
 	public function index()
 	{
 		echo "<h1>Selamat datang di Manage My Task!</h1>";
 		echo "<a href='http://localhost/ereview/index.php/manageMyTask/addNewTask'>Add New Task</a><br>";
 		echo "<a href='http://localhost/ereview/index.php/manageMyTask/confirmTaskCompletion'>Confirm Task Completion</a><br>";
 	}
+
 	public function addNewTask($pesan='')
 	{
 		$this->load->view('editor/addNewTask', array('msg' => $pesan, ));
 	}
+
 	public function addingNewTask(){
 		
 		$this->form_validation->set_rules(
@@ -36,17 +39,21 @@ class ManageMyTask extends CI_Controller {
 			return FALSE;
 		}
 
-		$res = $this->Task->insertNewTask();
-		echo "New Task is added";
+		$id_task = $this->Task->insertNewTask();
+		redirect('manageMyTask/selectPotentialReviewer/'. $id_task);
 	}
-	public function selectPotentialReviewer()
+
+	public function selectPotentialReviewer($id_task=-1)
 	{
-		$this->load->view('editor/selectPotentialReviewer');
+		$thetask = $this->Task->getTheTask($id_task);
+		$this->load->view('editor/selectPotentialReviewer', array('task' => $thetask[0]));
 	}
+
 	public function commitPayment()
 	{
 		$this->load->view('editor/commitPayment');
 	}
+
 	public function confirmTaskCompletion()
 	{
 		$this->load->view('editor/confirmTaskCzompletion');

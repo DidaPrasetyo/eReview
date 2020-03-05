@@ -14,6 +14,6 @@
 		<br/>
 		<input type="submit" value="Submit">
 	</form>
-	<a href='http://localhost/ereview/index.php/manageMyTask/selectPotentialReviewer'>Select Potential Reviewer</a>
+	<!-- <a href='http://localhost/ereview/index.php/manageMyTask/selectPotentialReviewer'>Select Potential Reviewer</a> -->
 </body>
 </html>
