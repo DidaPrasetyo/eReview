@@ -13,12 +13,31 @@ class ManageMyTask extends CI_Controller {
 	public function index()
 	{
 		echo "<h1>Selamat datang di Manage My Task!</h1>";
-		echo "<a href='http://localhost/ereview/index.php/managemytask/addnewtask'>Add New Task</a><br>";
-		echo "<a href='http://localhost/ereview/index.php/managemytask/confirmtaskcompletion'>Confirm Task Completion</a><br>";
+		echo "<a href='http://localhost/ereview/index.php/manageMyTask/addNewTask'>Add New Task</a><br>";
+		echo "<a href='http://localhost/ereview/index.php/manageMyTask/confirmTaskCompletion'>Confirm Task Completion</a><br>";
 	}
-	public function addNewTask()
+	public function addNewTask($pesan='')
 	{
-		$this->load->view('editor/addNewTask');
+		$this->load->view('editor/addNewTask', array('msg' => $pesan, ));
+	}
+	public function addingNewTask(){
+		
+		$this->form_validation->set_rules(
+			'judul','Judul',
+			'trim|min_length[2]|max_length[250]|xss_clean');
+		$this->form_validation->set_rules(
+			'katakunci','Kata Kunci',
+			'trim|min_length[2]|max_length[50]|xss_clean');
+		
+		$res = $this->form_validation->run();
+		if ($res == FALSE) {
+			$msg = validation_errors();
+			$this->load->view('editor/addNewTask', array('msg' => $msg));
+			return FALSE;
+		}
+
+		$res = $this->Task->insertNewTask();
+		echo "New Task is added";
 	}
 	public function selectPotentialReviewer()
 	{
@@ -26,10 +45,10 @@ class ManageMyTask extends CI_Controller {
 	}
 	public function commitPayment()
 	{
-		$this->load->view('editor/commitpayment');
+		$this->load->view('editor/commitPayment');
 	}
 	public function confirmTaskCompletion()
 	{
-		$this->load->view('editor/confirmtaskcompletion');
+		$this->load->view('editor/confirmTaskCzompletion');
 	}
 }
