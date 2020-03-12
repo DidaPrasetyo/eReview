@@ -4,7 +4,7 @@
 	<h1>Form Pembuatan Task Baru</h1>
 
 	<p>
-		<?php echo $msg; ?>
+		<?php if (strlen($msg)>0) echo $msg; ?>
 	</p>
 
 	<form action="addingNewTask" method="post">

@@ -18,7 +18,7 @@ class ManageMyTask extends CI_Controller {
 
 	public function addNewTask($pesan='')
 	{
-		$this->load->view('editor/addNewTask', array('msg' => $pesan, ));
+		$this->load->view('editor/addNewTask', array('msg' => $pesan));
 	}
 
 	public function addingNewTask(){

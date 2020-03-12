@@ -20,8 +20,6 @@
 				<td>Reviewer</td>
 				<td>
 					<select id="reviewer"> 
-						<!-- WHY NOT USING FOR LOOP SIR!!!!! 
-							oh ternyata nanti, ya udah-->
 						<option value="<?php echo $reviewers[0]['id_reviewer'];?>">
 							<?php echo $reviewers[0]['nama'];?>
 						</option>
