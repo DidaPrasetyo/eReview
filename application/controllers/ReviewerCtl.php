@@ -20,6 +20,18 @@ class ReviewerCtl extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('reviewer/ITU LAH JINGAN');
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'reviewer') {
+			redirect('welcome/redirecting');
+		}
+
+		$this->load->view('reviewer/header', array("nama_user" => $session_data['nama']));
+		$this->load->view('common/topmenu');
+		$this->load->view('common/content');
+		$this->load->view('common/footer');
 	}
 }

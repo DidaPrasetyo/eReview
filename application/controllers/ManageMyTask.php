@@ -12,8 +12,8 @@ class ManageMyTask extends CI_Controller {
 	public function index()
 	{
 		echo "<h1>Selamat datang di Manage My Task!</h1>";
-		echo "<a href='http://localhost/ereview/index.php/manageMyTask/addNewTask'>Add New Task</a><br>";
-		echo "<a href='http://localhost/ereview/index.php/manageMyTask/confirmTaskCompletion'>Confirm Task Completion</a><br>";
+		echo "<a href='http://localhost/ereview/manageMyTask/addNewTask'>Add New Task</a><br>";
+		echo "<a href='http://localhost/ereview/manageMyTask/confirmTaskCompletion'>Confirm Task Completion</a><br>";
 	}
 
 	public function addNewTask($pesan='')

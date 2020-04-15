@@ -13,9 +13,9 @@ class ManageAssignedTask extends CI_Controller {
 	public function index()
 	{
 		echo "<h1>Selamat datang di Manage Assigned Task!</h1>";
-		echo "<a href='http://localhost/ereview/index.php/manageassignedtask/accepttask'>Accept Task</a><br>";
-		echo "<a href='http://localhost/ereview/index.php/manageassignedtask/rejecttask'>Reject Task</a><br>";
-		echo "<a href='http://localhost/ereview/index.php/manageassignedtask/deductfunds'>Deduct Funds</a><br>";
+		echo "<a href='http://localhost/ereview/manageassignedtask/accepttask'>Accept Task</a><br>";
+		echo "<a href='http://localhost/ereview/manageassignedtask/rejecttask'>Reject Task</a><br>";
+		echo "<a href='http://localhost/ereview/manageassignedtask/deductfunds'>Deduct Funds</a><br>";
 	}
 	public function acceptTask()
 	{

@@ -20,9 +20,38 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		echo "<h1>Selamat datang di eReview!</h1>";
-		echo "<a href='http://localhost/ereview/index.php/managemytask'>Manage My Task</a><br>";
-		echo "<a href='http://localhost/ereview/index.php/manageassignedtask/'>Manage Assigned Task</a><br>";
-		// $this->load->view('welcome_message');
+		$this->load->view('common/header');
+		$this->load->view('common/topmenu');
+		$this->load->view('common/content');
+		$this->load->view('common/footer');
+	}
+	public function login($pesan='')
+	{
+		$this->load->view('common/header');
+		// $this->load->view('common/topmenu');
+		$this->load->view('login',array('msg' => $pesan));
+		// $this->load->view('common/content');
+		$this->load->view('common/footer');
+	}
+	public function redirecting(){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		switch ($session_data['id_grup']) {
+			case 1:
+				redirect('EditorCtl');
+				break;
+			case 2:
+				redirect('ReviewerCtl');
+				break;
+			case 2:
+				redirect('MakelarCtl');
+				break;
+			default:
+				redirect('welcome');
+				break;
+		}
 	}
 }

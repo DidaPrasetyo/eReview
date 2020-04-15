@@ -27,11 +27,7 @@ class AccountCtl extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('welcome_massage');
-	}
-	public function login($pesan='')
-	{
-		$this->load->view('login',array('msg' => $pesan));
+		redirect('welcome/login');
 	}
 	public function createAccount($pesan='')
 	{
@@ -78,22 +74,44 @@ class AccountCtl extends CI_Controller {
 			return FALSE;
 		}
 
-		$id_user = $this->Account->getIdUser();
+		$users = $this->Account->getIdUser();
 
-		if ($id_user == -1) {
+		if (sizeof($users) <= 0) {
 			$this->load->view('login', array('msg' => 'Username/Password Invalid'));
 		} else {
-			$peran = $this->Account->getPeranUser($id_user);
-			if ($peran == 1) {
-				// MATI
-				redirect('EditorCtl/index/'. $id_user);
-			} elseif ($peran == 2) {
-				// Bundir
-				redirect('ReviewerCTL/index/'. $id_user);
+
+			$sess_array = array(
+				'id_user'	=> $users[0]['id'],
+				'nama'		=> $users[0]['nama'],
+				'username'	=> $users[0]['username'],
+				'id_grup'	=> $users[0]['id_grup'],
+				'nama_grup'	=> $users[0]['nama_grup'],
+				'currentgrup'	=> $users[0]['nama_grup']
+			);
+			$this->session->set_userdata('logged_in', $sess_array);
+
+			// $peran = $this->Account->getPeranUser($id_user);
+			if ($users[0]['id_grup'] == 1) {
+				
+				redirect('EditorCtl');
+			} elseif ($users[0]['id_grup'] == 2) {
+				
+				redirect('ReviewerCtl');
+			} elseif ($users[0]['id_grup'] == 3) {
+				
+				redirect('MakelarCtl');
 			} else {
-				// Gantung Diri
-				redirect('Makelar/index/'. $id_user);
+				redirect('welcome');
 			}
 		}		
+	}
+	public function logout(){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/login');
+		}
+		$session_data = $this->session->userdata('logged_in');
+		$this->session->unset_userdata('logged_in');
+		session_destroy();
+		redirect('welcome');
 	}
 }

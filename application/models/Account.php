@@ -42,20 +42,26 @@ class Account extends CI_Model {
 		return $id_user;
 	}
 	function getIdUser(){
-		$q = "SELECT * FROM users WHERE username='". $this->input->post('username') ."',"."password='". $this->input->post('password') ."'";
+		$q = 
+		"SELECT t1.*, t3.id_grup, t3.nama_grup FROM ( SELECT * FROM users t0 
+		WHERE t0.username='". $this->input->post('username') ."'
+		AND t0.password=MD5('". $this->input->post('password') ."')
+		AND t0.sts_user=1) t1
+		INNER JOIN member t2 ON t1.id=t2.id_user AND t2.sts_member=1
+		INNER JOIN grup t3 ON t2.id_grup=t3.id_grup AND t3.sts_grup=1";
 		$res = $this->db->query($q);
 		$users = $res->result_array();
 
 		if (count($users)>0) {
-			return $users[0]['id_user'];
+			return $users;
 		}
-		return -1;
+		return [];
 	}
 	function getPeranUser($id_user = -1){
-		$q = "SELECT * FROM member WHERE id_user='". $id_user ."'";
+		$q = "SELECT * FROM member WHERE id_user=". $id_user;
 		$res = $this->db->query($q);
 		$peran = $res->result_array();
-		$peran[0]['id_group'];
+		return $peran[0]['id_grup'];
 	}
 }
 ?>

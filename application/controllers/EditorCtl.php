@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class EditroCtl extends CI_Controller {
+class EditorCtl extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,6 +20,18 @@ class EditroCtl extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'editor') {
+			redirect('welcome/redirecting');
+		}
+
+		$this->load->view('editor/header', array("nama_user" => $session_data['nama']));
+		$this->load->view('common/topmenu');
+		$this->load->view('common/content');
+		$this->load->view('common/footer');
 	}
 }
