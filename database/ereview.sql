@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 12, 2020 at 08:00 AM
+-- Generation Time: Apr 16, 2020 at 12:40 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -47,7 +47,7 @@ CREATE TABLE `assignment` (
 --
 
 CREATE TABLE `editor` (
-  `id_reviewer` int(11) NOT NULL,
+  `id_editor` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -59,7 +59,7 @@ CREATE TABLE `editor` (
 -- Dumping data for table `editor`
 --
 
-INSERT INTO `editor` (`id_reviewer`, `id_user`, `nama`, `date_created`, `date_updated`, `sts_editor`) VALUES
+INSERT INTO `editor` (`id_editor`, `id_user`, `nama`, `date_created`, `date_updated`, `sts_editor`) VALUES
 (1, 0, 'Dida Prasetyo Rahmat', '2020-02-28 08:09:56', '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
@@ -70,7 +70,7 @@ INSERT INTO `editor` (`id_reviewer`, `id_user`, `nama`, `date_created`, `date_up
 
 CREATE TABLE `grup` (
   `id_grup` int(11) NOT NULL,
-  `nama` varchar(50) NOT NULL,
+  `nama_grup` varchar(50) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_updated` timestamp NULL DEFAULT NULL,
   `sts_grup` tinyint(4) NOT NULL DEFAULT '1'
@@ -80,7 +80,7 @@ CREATE TABLE `grup` (
 -- Dumping data for table `grup`
 --
 
-INSERT INTO `grup` (`id_grup`, `nama`, `date_created`, `date_updated`, `sts_grup`) VALUES
+INSERT INTO `grup` (`id_grup`, `nama_grup`, `date_created`, `date_updated`, `sts_grup`) VALUES
 (1, 'editor', '2020-03-12 05:56:08', '2020-03-12 05:57:48', 1),
 (2, 'reviewer', '2020-03-12 05:56:08', '2020-03-12 05:57:48', 1),
 (3, 'makelar', '2020-03-12 05:56:19', '2020-03-12 05:57:48', 1);
@@ -110,16 +110,18 @@ CREATE TABLE `member` (
   `id_grup` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_updated` timestamp NULL DEFAULT NULL
+  `date_updated` timestamp NULL DEFAULT NULL,
+  `sts_member` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `member`
 --
 
-INSERT INTO `member` (`id_member`, `id_grup`, `id_user`, `date_created`, `date_updated`) VALUES
-(1, 2, 6, '2020-03-12 06:48:49', '2020-03-12 06:48:49'),
-(2, 0, 9, '2020-03-12 06:56:12', '2020-03-12 06:56:12');
+INSERT INTO `member` (`id_member`, `id_grup`, `id_user`, `date_created`, `date_updated`, `sts_member`) VALUES
+(1, 1, 6, '2020-03-12 06:48:49', '2020-03-12 06:48:49', 1),
+(2, 2, 7, '2020-03-12 06:56:12', '2020-03-12 06:56:12', 1),
+(3, 3, 11, '2020-03-26 15:12:27', '2020-03-26 15:12:27', 1);
 
 -- --------------------------------------------------------
 
@@ -158,9 +160,7 @@ CREATE TABLE `reviewer` (
 --
 
 INSERT INTO `reviewer` (`id_reviewer`, `id_user`, `no_rek`, `kompetensi`, `date_created`, `date_updated`) VALUES
-(1, 6, 0, '', '2020-03-12 06:16:32', '2020-03-12 06:16:32'),
-(2, 8, 0, '', '2020-03-12 06:55:45', '2020-03-12 06:55:45'),
-(3, 9, 0, '', '2020-03-12 06:56:11', '2020-03-12 06:56:11');
+(1, 6, 0, '', '2020-03-12 06:16:32', '2020-03-12 06:16:32');
 
 -- --------------------------------------------------------
 
@@ -213,10 +213,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `nama`, `email`, `date_created`, `date_updated`, `sts_user`) VALUES
-(6, 'didapras', 'didapras', 'Dida Prasetyo Rahmat', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:16:32', '2020-03-12 06:16:32', 1),
-(7, 'dida', 'dida', 'Si Dida Lagi', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:53:37', '2020-03-12 06:53:37', 1),
-(8, 'dida', 'dida', 'Si Dida Lagi', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:55:45', '2020-03-12 06:55:45', 1),
-(9, 'dida', 'dida', 'Si Dida Lagi', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:56:11', '2020-03-12 06:56:11', 1);
+(6, 'didapras', 'abf4b25615c2e7d7d179458bf791e9ba', 'Dida Prasetyo Rahmat', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:16:32', '2020-03-12 06:16:32', 1),
+(7, 'dida', 'b9343bdbf698cbc25b1528b0512e6210', 'Si Dida Lagi', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:53:37', '2020-03-12 06:53:37', 1),
+(11, 'didapras231', 'ef8961d24bdfaff391c292cd82fd3bed', 'dida trus', 'didaprasetyorahmat@gmail.com', '2020-04-15 18:02:02', '2020-04-15 18:02:02', 1);
 
 --
 -- Indexes for dumped tables
@@ -232,7 +231,7 @@ ALTER TABLE `assignment`
 -- Indexes for table `editor`
 --
 ALTER TABLE `editor`
-  ADD PRIMARY KEY (`id_reviewer`);
+  ADD PRIMARY KEY (`id_editor`) USING BTREE;
 
 --
 -- Indexes for table `grup`
@@ -290,7 +289,7 @@ ALTER TABLE `assignment`
 -- AUTO_INCREMENT for table `editor`
 --
 ALTER TABLE `editor`
-  MODIFY `id_reviewer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_editor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `grup`
@@ -308,7 +307,7 @@ ALTER TABLE `makelar`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id_member` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_member` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `pembayaran`
@@ -320,7 +319,7 @@ ALTER TABLE `pembayaran`
 -- AUTO_INCREMENT for table `reviewer`
 --
 ALTER TABLE `reviewer`
-  MODIFY `id_reviewer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_reviewer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `task`
@@ -332,7 +331,7 @@ ALTER TABLE `task`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
