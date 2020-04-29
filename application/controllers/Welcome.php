@@ -33,6 +33,13 @@ class Welcome extends CI_Controller {
 		// $this->load->view('common/content');
 		$this->load->view('common/footer');
 	}
+	public function signup()
+	{
+		$this->load->view('common/header');
+		$this->load->view('signup',array('error' => '' ));
+		$this->load->view('common/footer');
+		return;
+	}
 	public function redirecting(){
 		if (!$this->session->userdata('logged_in')) {
 			redirect('welcome/index');
@@ -41,13 +48,13 @@ class Welcome extends CI_Controller {
 
 		switch ($session_data['id_grup']) {
 			case 1:
-				redirect('EditorCtl');
+				redirect('editorCtl');
 				break;
 			case 2:
-				redirect('ReviewerCtl');
+				redirect('reviewerCtl');
 				break;
 			case 2:
-				redirect('MakelarCtl');
+				redirect('makelarCtl');
 				break;
 			default:
 				redirect('welcome');
