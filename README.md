@@ -18,6 +18,7 @@ so it will looks like
 --ereview
 --htdocs
 ---ereview(extract from ereview-htdocs.zip)
+
 if you using wampp, extract this repo in your wamp and extract the ereview-htdocs.zip to your www folder
 so it will looks like
 -wampp
