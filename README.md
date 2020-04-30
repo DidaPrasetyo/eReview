@@ -14,14 +14,14 @@ Developer Team :
 Notes :
 if you using xampp, extract this repo outside the htdocs and extract the ereview-htdocs.zip to your htdocs folder
 so it will looks like
--xampp
---ereview
---htdocs
----ereview(extract from ereview-htdocs.zip)
+../xampp (your xampp folder)
+../../ereview
+../../htdocs
+../../../ereview(extract from ereview-htdocs.zip)
 
 if you using wampp, extract this repo in your wamp and extract the ereview-htdocs.zip to your www folder
 so it will looks like
--wampp
---ereview
---www
----ereview(extract from ereview-htdocs.zip)
+../wamp64 (your wampp folder)
+../../ereview
+../../www
+../../../ereview(extract from ereview-htdocs.zip)
