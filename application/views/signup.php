@@ -42,8 +42,22 @@
                         <tr>
                           <td>Roles</td>
                           <td>:</td>
-                          <td><input type="checkbox" id="reviewer" name="roles[]" value="1" checked/>Reviewer
-                          <input type="checkbox" id="reviewer" name="roles[]" value="2"/>Editor</td>
+                          <td>
+                            <input type="checkbox" id="editor" name="roles[]" value="1"/>Editor
+                            <input type="checkbox" id="reviewer" name="roles[]" value="2"/>Reviewer
+                          </td>
+                        </tr>        
+                        <tr id="norek" style="display: none">
+                          <td>No. Rekening</td>
+                          <td>:</td>
+                          <td><input type="text" id="no_rek" name="no_rek" width="100"/></td>
+                        </tr>
+                        <tr id="kompetensi" style="display: none">
+                          <td>kompetensi</td>
+                          <td>:</td>
+                          <td>
+                            <textarea id="kompetensi" name="kompetensi"></textarea>
+                          </td>
                         </tr>
                         <tr>
                           <td>*Photo</td>
@@ -64,3 +78,15 @@
       </div>
     </div>
   </section>
+ <script type="text/javascript">
+   document.getElementById("reviewer").addEventListener("click", function(){
+    var x = document.getElementById("reviewer").checked;
+    if (x == true) {
+      document.getElementById("norek").style.display='';
+      document.getElementById("kompetensi").style.display='';
+    } else {
+      document.getElementById("norek").style.display='none';
+      document.getElementById("kompetensi").style.display='none';
+    }
+});
+ </script>

@@ -55,7 +55,7 @@
                               </tr>
                             </table>
 
-                            <input type="submit" value="Profile">
+                            <input type="submit" value="Submit">
                           </form>
                         </td>
                         <td width="34%">

@@ -76,7 +76,9 @@ class AccountCtl extends CI_Controller {
 		$res = $this->form_validation->run();
 		if ($res == FALSE) {
 			$msg = validation_errors();
-			$this->load->view('signup', array('msg' => $msg));
+			$this->load->view('common/header');
+			$this->load->view('signup', array('error' => $msg));
+			$this->load->view('common/footer');
 			return FALSE;
 		}
 
@@ -86,8 +88,8 @@ class AccountCtl extends CI_Controller {
 		$config['max_width']            = 150;
 		$config['max_height']           = 200;
 
-		// $new_name = time().$_FILES["photo"]['name'];
-		// $config['filename'] = $new_name;
+		$new_name = $this->input->post('username').$_FILES['photo']['name'];
+		$config['file_name'] = $new_name;
 
 		$this->load->library('upload', $config);
 		if ( ! $this->upload->do_upload('photo'))
@@ -99,8 +101,8 @@ class AccountCtl extends CI_Controller {
 			return;
 		}
 
-		$data = array('upload_data' => $this->upload->data());
-		$id_user = $this->Account->insertNewUser();
+		$data = $this->upload->data();
+		$id_user = $this->Account->insertNewUser($data['file_name']);
 		$this->load->view('common/header');
 		$this->load->view('signup_success');
 		$this->load->view('common/footer');

@@ -21,7 +21,7 @@ class ApplicationCtl extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('Task'));
+		$this->load->model(array('Task','Reviewer'));
 	}
 
 
@@ -40,5 +40,8 @@ class ApplicationCtl extends CI_Controller {
 
 		force_download('../../ereview/berkas/'.$task[0]['file_loc'], NULL);
 		return;
+	}
+	public function debug(){
+		$id_task = $this->Reviewer->getAllReviewers();
 	}
 }

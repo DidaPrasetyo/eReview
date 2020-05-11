@@ -22,7 +22,7 @@ class EditorCtl extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('Task'));
+		$this->load->model(array('Task','Reviewer','Payment'));
 	}
 
 	public function index()
@@ -107,8 +107,8 @@ class EditorCtl extends CI_Controller {
 			return;
 		}
 
-		$data = array('upload_data' => $this->upload->data());
-		$id_task = $this->Task->insertNewTask($session_data['id_user'],$new_name);
+		$data = $this->upload->data();
+		$id_task = $this->Task->insertNewTask($session_data['id_user'],$data['file_name']);
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		$this->load->view('editor/Add_success',array('error' => ""));
 		$this->load->view('common/footer');
@@ -132,5 +132,51 @@ class EditorCtl extends CI_Controller {
 		$this->load->view('editor/ViewTask_v', array('tasks' => $tasks));
 		$this->load->view('common/content');
 		$this->load->view('common/footer');
+	}
+
+	public function selectReviewer($id_task)
+	{
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'editor') {
+			redirect('welcome/redirecting');
+		}
+
+		$reviewer = $this->Reviewer->getAllReviewers();
+		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
+		$this->load->view('editor/selectReviewer', array('reviewer' => $reviewer->result(), 'id_task' => $id_task));
+		$this->load->view('common/content');
+		$this->load->view('common/footer');
+	}
+
+	public function selectingReviewer()
+	{
+		$task = $this->input->post('id_task');
+		$select = $this->input->post('select');
+		$price = $this->input->post('price');
+		$total = $this->input->post('total');
+
+		foreach ($select as $value) {
+			$data = array(
+				'id_task' => $task,
+				'id_reviewer' => $value,
+				'price' => $price
+			);
+			$this->Task->setAssignment($data);
+		}
+		$data2 = array(
+			'id_task' => $task,
+			'amount' => $total,
+			'status' => '0'
+		);
+		$this->Payment->newPayment($data2);
+		redirect('EditorCtl/assignedTask');
+	}
+
+	public function assignedTask(){
+		echo "DUAR";
 	}
 }

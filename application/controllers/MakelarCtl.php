@@ -29,7 +29,7 @@ class MakelarCtl extends CI_Controller {
 			redirect('welcome/redirecting');
 		}
 
-		$this->load->view('makelar/header', array("nama_user" => $session_data['nama']));
+		$this->load->view('makelar/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		$this->load->view('common/topmenu');
 		$this->load->view('common/content');
 		$this->load->view('common/footer');

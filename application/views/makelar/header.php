@@ -62,8 +62,13 @@
                 <li>
                   <a href="contact.html">Contact</a>
                 </li>
-                <li>
-                  <a href="<?php echo base_url()."accountCtl/logout";?>">Logout (<?php echo $nama_user;?>)</a>
+                <li class="dropdown">
+                  <a href="#"><?php echo $nama_user;?></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="<?php echo base_url()."accountCtl/changeRole"?>"><?php echo ucwords($current_role);?></a></li>
+                    <li><a href="<?php echo base_url()."accountCtl/profile"?>">Profil</a></li>
+                    <li><a href="<?php echo base_url()."accountCtl/logout";?>">Logout</a></li>
+                  </ul>
                 </li>
               </ul>
             </nav>

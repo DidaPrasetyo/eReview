@@ -3,12 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Account extends CI_Model {
 
-	function insertNewUser(){
-		$q = "INSERT INTO users (nama,username,password,email,date_updated)VALUES (
+	function insertNewUser($photo){
+		$q = "INSERT INTO users (nama,username,password,email,photo,date_updated)VALUES (
 			'". $this->input->post('nama') ."',
 			'". $this->input->post('username') ."',
 			MD5('". $this->input->post('password') ."'),
 			'". $this->input->post('email') ."',
+			'". $photo ."',
 			now()
 		)";
 		$this->db->query($q);
@@ -19,8 +20,8 @@ class Account extends CI_Model {
 			$peran	=	$item;
 			if ($peran == 1) {
 
-				$q2 = "INSERT INTO editor (id_user,date_updated)VALUES (
-				". $id_user .", now()
+				$q2 = "INSERT INTO editor (id_user,nama,date_updated)VALUES (
+				". $id_user .",'". $this->input->post('nama') ."', now()
 				)";
 				$this->db->query($q2);
 
@@ -31,8 +32,8 @@ class Account extends CI_Model {
 
 			} elseif ($peran == 2) {
 
-				$q2 = "INSERT INTO reviewer (id_user,date_updated)VALUES (
-				". $id_user .", now()
+				$q2 = "INSERT INTO reviewer (id_user,no_rek,kompetensi,date_updated)VALUES (
+				". $id_user .",'". $this->input->post('no_rek') ."','". $this->input->post('kompetensi') ."', now()
 				)";
 				$this->db->query($q2);
 
