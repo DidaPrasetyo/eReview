@@ -15,6 +15,7 @@ class Task extends CI_Model {
 		$this->db->set('judul',$this->input->post('judul'));
 		$this->db->set('keywords',$this->input->post('katakunci'));
 		$this->db->set('authors',$this->input->post('authors'));
+		$this->db->set('page',$this->input->post('page'));
 		$this->db->set('file_loc',$filename);
 		$this->db->set('id_editor',$id_editor->id_editor);
 		$this->db->set('date_uploaded', 'NOW()', FALSE);
@@ -33,7 +34,7 @@ class Task extends CI_Model {
 		$this->db->where('id_editor', $id_editor->id_editor);
 		$this->db->where('sts_task', 0);
 		$res = $this->db->get('task');
-		return $res->result_array();
+		return $res;
 	}
 
 	function getMyAssignment($id_user=-1){
@@ -49,6 +50,10 @@ class Task extends CI_Model {
 		$this->db->set('tgl_assign', 'NOW()', FALSE);
 		$this->db->set('date_updated', 'NOW()', FALSE);
 		$this->db->insert('assignment',$data);
+	}
+
+	function pageTask($id){
+		return $this->db->select('page')->where('id_task', $id)->get('task')->row();
 	}
 }
 ?>

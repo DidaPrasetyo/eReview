@@ -120,14 +120,18 @@ class AccountCtl extends CI_Controller {
 		$res = $this->form_validation->run();
 		if ($res == FALSE) {
 			$msg = validation_errors();
+			$this->load->view('common/header');
 			$this->load->view('login', array('msg' => $msg));
+			$this->load->view('common/footer');
 			return FALSE;
 		}
 
 		$users = $this->Account->getIdUser();
 
 		if (sizeof($users) <= 0) {
+			$this->load->view('common/header');
 			$this->load->view('login', array('msg' => 'Username/Password Invalid'));
+			$this->load->view('common/footer');
 		} else {
 
 			$sess_array = array(

@@ -21,7 +21,7 @@ class ApplicationCtl extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('Task','Reviewer'));
+		$this->load->model(array('Task','Reviewer','Payment'));
 	}
 
 
@@ -41,7 +41,44 @@ class ApplicationCtl extends CI_Controller {
 		force_download('../../ereview/berkas/'.$task[0]['file_loc'], NULL);
 		return;
 	}
+
+	public function buktiEditor($id=0)
+	{
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		$bayar = $this->Payment->getThePayment($id);
+
+		if (sizeof($bayar)<=0) {
+			return;
+		}
+
+		force_download('../../ereview/bukti/editor/'.$bayar[0]['bukti'], NULL);
+		return;
+	}
+
 	public function debug(){
-		$id_task = $this->Reviewer->getAllReviewers();
+		$sts = $this->Reviewer->updateStsAssignment('5');
+		// var_dump($sts->result());
+		// echo "<br>";
+		// var_dump($sts->result_array());
+		// echo "<br>";
+		// var_dump($sts->row());
+		// foreach ($sts->result() as $row) {
+		// 	echo $row->judul;
+		// }
+		// if (in_array('0', $array)) {
+		// 	echo "BAYAR CUK";
+		// } else {
+		// 	echo "ANJIR LUNAS";
+		// }
+		// $date = date('Y-m-d', now());
+		// $page = '10';
+		// $deadline = date('Y-m-d', strtotime($date. +$page .' days'));
+		// echo $date;
+		// echo '<br>'.$deadline;
+		// echo 'now() = '. now();
 	}
 }

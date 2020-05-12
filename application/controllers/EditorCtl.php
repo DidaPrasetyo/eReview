@@ -97,7 +97,7 @@ class EditorCtl extends CI_Controller {
 		$new_name = str_replace(' ', '_', time().'_'.$_FILES["userfile"]['name']);
 		$config['file_name'] = $new_name;
 
-		$this->load->library('upload', $config);
+		$this->upload->initialize($config);
 		if ( ! $this->upload->do_upload('userfile'))
 		{
 			$error = array('error' => $this->upload->display_errors());
@@ -127,9 +127,22 @@ class EditorCtl extends CI_Controller {
 		}
 
 		$tasks = $this->Task->getMyTask($session_data['id_user']);
+		$sts = $this->Payment->getPayment($tasks->row()->id_task);
+		if ($sts->row() == NULL) {
+			$status = 3;
+		} else {
+			foreach ($sts->result() as $row) {
+				$array[] = $row->status;
+			}
+			if (in_array('0', $array)) {
+				$status = 0;
+			} else {
+				$status = 1;
+			}
+		}
 
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
-		$this->load->view('editor/ViewTask_v', array('tasks' => $tasks));
+		$this->load->view('editor/ViewTask_v', array('tasks' => $tasks->result(), 'status' => $status));
 		$this->load->view('common/content');
 		$this->load->view('common/footer');
 	}
@@ -145,25 +158,44 @@ class EditorCtl extends CI_Controller {
 			redirect('welcome/redirecting');
 		}
 
-		$reviewer = $this->Reviewer->getAllReviewers();
+		$data = $this->Reviewer->getAllReviewers();
+		$page = $this->Task->pageTask($id_task)->page;
+		
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
-		$this->load->view('editor/selectReviewer', array('reviewer' => $reviewer->result(), 'id_task' => $id_task));
+		if ($data->row() == NULL) {
+			$this->load->view('common/message', array('msg' => 'Semua reviewer sudah di pilih untuk task ini'));
+		} else {
+		$this->load->view('editor/selectReviewer', array('reviewer' => $data->result(), 'id_task' => $id_task, 'pageTask' => $page));
+		}
 		$this->load->view('common/content');
 		$this->load->view('common/footer');
 	}
 
 	public function selectingReviewer()
 	{
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'editor') {
+			redirect('welcome/redirecting');
+		}
+
 		$task = $this->input->post('id_task');
 		$select = $this->input->post('select');
 		$price = $this->input->post('price');
 		$total = $this->input->post('total');
+		$page = $this->input->post('page');
+		$date = date('Y-m-d', now());
+		$deadline = date('Y-m-d', strtotime($date. +$page .' days'));
 
 		foreach ($select as $value) {
 			$data = array(
 				'id_task' => $task,
 				'id_reviewer' => $value,
-				'price' => $price
+				'price' => $price,
+				'tgl_deadline' => $deadline
 			);
 			$this->Task->setAssignment($data);
 		}
@@ -173,10 +205,59 @@ class EditorCtl extends CI_Controller {
 			'status' => '0'
 		);
 		$this->Payment->newPayment($data2);
-		redirect('EditorCtl/assignedTask');
+		redirect('EditorCtl/viewTask');
 	}
 
-	public function assignedTask(){
-		echo "DUAR";
+	public function listPayment($id,$error = '')
+	{
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'editor') {
+			redirect('welcome/redirecting');
+		}
+
+		$payment = $this->Payment->getPaymentTask($id);
+
+		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
+		$this->load->view('editor/ViewPayment_v', array('payment' => $payment->result(),'error' => $error));
+		$this->load->view('common/content');
+		$this->load->view('common/footer');
+	}
+
+	public function uploadBukti($id,$id_task){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'editor') {
+			redirect('welcome/redirecting');
+		}
+
+		$config['upload_path']          = '../../ereview/bukti/editor/';
+		$config['allowed_types']        = 'jpg|png';
+		$config['max_size']             = 10000;
+
+		$new_name = str_replace(' ', '_', time().'_'.$_FILES["bukti".$id]['name']);
+		$config['file_name'] = $new_name;
+
+		$this->upload->initialize($config);
+		if ( ! $this->upload->do_upload('bukti'.$id))
+		{
+			$error = $this->upload->display_errors();
+			echo "<script>alert('".$error."')</script>";
+			return;
+		}
+
+		$data = $this->upload->data();
+		$this->Payment->updateStsPayment($id,$data['file_name']);
+		$this->Reviewer->updateStsAssignment($id_task);
+		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
+		$this->load->view('editor/Upload_success', array('error' => ''));
+		$this->load->view('common/footer');
+		return;
 	}
 }

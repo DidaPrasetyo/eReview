@@ -30,8 +30,12 @@
           </table>
           <input type="hidden" name="id_task" value="<?php echo $id_task; ?>">
           <div style="float: left;">
+            <label for="page">Jumlah halaman jurnal</label>
+            <input type="number" id="page" name="page" value="<?php echo $pageTask; ?>" readonly>
+            <label for="pagePrice">Harga per halaman</label>
+            <input type="number" id="pagePrice" name="pagePrice" value="15000" readonly>
             <label for="price">Harga per Reviewer</label>
-            <input type="number" id="price" name="price" value="0">
+            <input type="number" id="price" name="price" readonly>
             <label class="label" id="jml">0</label>
             <label for="total">Total (Harga x Jumlah Reviewer)</label>
             <input type="number" id="total" name="total" readonly>
@@ -43,21 +47,19 @@
     </div>
   </section>
   <script type="text/javascript">
+      var a = document.getElementById("page").value;
+      var b = document.getElementById("pagePrice").value;
+      document.getElementById("price").value = a*b;
     document.getElementById("form").addEventListener("click",function(){
       var x = document.querySelectorAll('input[type="checkbox"]:checked').length;
       document.getElementById("jml").innerHTML = x;
       var y = document.getElementById("price").value;
       document.getElementById("total").value = x*y;
     });
-    document.addEventListener("keyup", function(){
-      var x = document.querySelectorAll('input[type="checkbox"]:checked').length;
-      var y = document.getElementById("price").value;
-      document.getElementById("total").value = x*y;
-    });
     document.getElementById("form").addEventListener('submit', (e) => {
-      var x = document.getElementById("price").value;
+      var x = document.getElementById("page").value;
       if (x == 0) {
-        alert("Masukkan Harga Per Reviewer terlebih dahulu");
+        alert("Masukkan Jumlah Halaman terlebih dahulu");
         e.preventDefault()
       }
     });

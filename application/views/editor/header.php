@@ -49,7 +49,7 @@
             <nav>
               <ul class="nav topnav">
                 <li class="dropdown active">
-                  <a href="index.html">Home</a>
+                  <a href="<?php echo base_url().'editorCtl'; ?>">Home</a>
                 </li>
                 <li class="dropdown">
                   <a href="#">Task</a>

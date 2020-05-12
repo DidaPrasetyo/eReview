@@ -39,6 +39,11 @@
                           <td>:</td>
                           <td><input type="file" id="userfile" name="userfile" width="20"/></td>
                         </tr>
+                        <tr>
+                          <td>*Jumlah halaman jurnal</td>
+                          <td>:</td>
+                          <td><input type="number" id="page" name="page" width="100"/></td>
+                        </tr>
                       </table>
 
                       <input type="submit" value="Submit">

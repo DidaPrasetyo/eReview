@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2020 at 12:40 PM
+-- Generation Time: May 13, 2020 at 01:17 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.2.7
 
@@ -31,14 +31,26 @@ SET time_zone = "+00:00";
 CREATE TABLE `assignment` (
   `id_assign` int(11) NOT NULL,
   `id_task` int(11) NOT NULL,
+  `id_pembayaran` int(11) NOT NULL,
   `id_reviewer` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `price` float NOT NULL,
   `tgl_assign` date DEFAULT NULL,
   `tgl_deadline` date DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_updated` timestamp NULL DEFAULT NULL,
   `sts_assign` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `assignment`
+--
+
+INSERT INTO `assignment` (`id_assign`, `id_task`, `id_pembayaran`, `id_reviewer`, `status`, `price`, `tgl_assign`, `tgl_deadline`, `date_created`, `date_updated`, `sts_assign`) VALUES
+(64, 7, 0, 1, 1, 300000, '2020-05-13', '2020-06-02', '2020-05-12 23:14:46', '2020-05-12 23:14:46', 1),
+(65, 7, 0, 2, 1, 300000, '2020-05-13', '2020-06-02', '2020-05-12 23:14:47', '2020-05-12 23:14:47', 1),
+(66, 7, 0, 6, 1, 300000, '2020-05-13', '2020-06-02', '2020-05-12 23:14:47', '2020-05-12 23:14:47', 1),
+(67, 7, 0, 7, 1, 300000, '2020-05-13', '2020-06-02', '2020-05-12 23:14:47', '2020-05-12 23:14:47', 1);
 
 -- --------------------------------------------------------
 
@@ -60,7 +72,11 @@ CREATE TABLE `editor` (
 --
 
 INSERT INTO `editor` (`id_editor`, `id_user`, `nama`, `date_created`, `date_updated`, `sts_editor`) VALUES
-(1, 0, 'Dida Prasetyo Rahmat', '2020-02-28 08:09:56', '0000-00-00 00:00:00', 1);
+(1, 6, 'Dida Prasetyo Rahmat', '2020-02-28 08:09:56', '0000-00-00 00:00:00', 1),
+(2, 12, 'Si Bambang', '2020-04-27 23:15:04', '2020-04-27 23:15:04', 1),
+(6, 16, 'si siti', '2020-05-07 23:09:34', '2020-05-07 23:09:34', 1),
+(7, 17, 'jangkrik', '2020-05-08 01:31:36', '2020-05-08 01:31:36', 1),
+(8, 18, 'duar', '2020-05-10 00:46:50', '2020-05-10 00:46:50', 1);
 
 -- --------------------------------------------------------
 
@@ -121,7 +137,22 @@ CREATE TABLE `member` (
 INSERT INTO `member` (`id_member`, `id_grup`, `id_user`, `date_created`, `date_updated`, `sts_member`) VALUES
 (1, 1, 6, '2020-03-12 06:48:49', '2020-03-12 06:48:49', 1),
 (2, 2, 7, '2020-03-12 06:56:12', '2020-03-12 06:56:12', 1),
-(3, 3, 11, '2020-03-26 15:12:27', '2020-03-26 15:12:27', 1);
+(3, 3, 11, '2020-03-26 15:12:27', '2020-03-26 15:12:27', 1),
+(4, 1, 12, '2020-04-27 23:15:04', '2020-04-27 23:15:04', 1),
+(5, 2, 12, '2020-04-27 23:15:04', '2020-04-27 23:15:04', 1),
+(6, 1, 13, '2020-05-07 23:02:33', '2020-05-07 23:02:33', 1),
+(7, 2, 13, '2020-05-07 23:02:33', '2020-05-07 23:02:33', 1),
+(8, 1, 14, '2020-05-07 23:04:09', '2020-05-07 23:04:09', 1),
+(9, 2, 14, '2020-05-07 23:04:09', '2020-05-07 23:04:09', 1),
+(10, 1, 15, '2020-05-07 23:04:44', '2020-05-07 23:04:44', 1),
+(11, 2, 15, '2020-05-07 23:04:44', '2020-05-07 23:04:44', 1),
+(12, 1, 16, '2020-05-07 23:09:34', '2020-05-07 23:09:34', 1),
+(13, 2, 16, '2020-05-07 23:09:34', '2020-05-07 23:09:34', 1),
+(14, 1, 17, '2020-05-08 01:31:36', '2020-05-08 01:31:36', 1),
+(15, 1, 18, '2020-05-10 00:46:50', '2020-05-10 00:46:50', 1),
+(16, 2, 18, '2020-05-10 00:46:50', '2020-05-10 00:46:50', 1),
+(17, 1, 19, '2020-05-10 00:53:54', '2020-05-10 00:53:54', 1),
+(18, 2, 19, '2020-05-10 00:53:54', '2020-05-10 00:53:54', 1);
 
 -- --------------------------------------------------------
 
@@ -139,6 +170,13 @@ CREATE TABLE `pembayaran` (
   `date_updated` timestamp NULL DEFAULT NULL,
   `sts_payment` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pembayaran`
+--
+
+INSERT INTO `pembayaran` (`id_pembayaran`, `amount`, `bukti`, `status`, `id_task`, `date_created`, `date_updated`, `sts_payment`) VALUES
+(15, 1200000, '1589325384_index.jpg', 1, 7, '2020-05-12 23:14:47', '2020-05-12 23:14:47', 1);
 
 -- --------------------------------------------------------
 
@@ -160,7 +198,10 @@ CREATE TABLE `reviewer` (
 --
 
 INSERT INTO `reviewer` (`id_reviewer`, `id_user`, `no_rek`, `kompetensi`, `date_created`, `date_updated`) VALUES
-(1, 6, 0, '', '2020-03-12 06:16:32', '2020-03-12 06:16:32');
+(1, 7, 0, '', '2020-03-12 06:16:32', '2020-03-12 06:16:32'),
+(2, 12, 0, '', '2020-04-27 23:15:04', '2020-04-27 23:15:04'),
+(6, 16, 0, '', '2020-05-07 23:09:34', '2020-05-07 23:09:34'),
+(7, 18, 1234567890, 'pro, banget, sangat pro', '2020-05-10 00:46:50', '2020-05-10 00:46:50');
 
 -- --------------------------------------------------------
 
@@ -174,22 +215,19 @@ CREATE TABLE `task` (
   `authors` varchar(300) DEFAULT NULL,
   `keywords` varchar(300) DEFAULT NULL,
   `file_loc` varchar(300) DEFAULT NULL,
-  `id_editor` int(11) NOT NULL,
+  `page` int(11) NOT NULL,
+  `id_editor` int(11) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_uploaded` timestamp NULL DEFAULT NULL,
-  `sts_task` tinyint(4) NOT NULL DEFAULT '1'
+  `sts_task` tinyint(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `task`
 --
 
-INSERT INTO `task` (`id_task`, `judul`, `authors`, `keywords`, `file_loc`, `id_editor`, `date_created`, `date_uploaded`, `sts_task`) VALUES
-(1, 'judul', NULL, NULL, NULL, 0, '2020-02-28 08:27:39', NULL, 1),
-(2, 'ini judul buku pertama saya', NULL, 'buku, pertama, judul', NULL, 0, '2020-03-05 06:26:30', NULL, 1),
-(3, 'ini judul buku pertama saya', NULL, 'buku, pertama, judul', NULL, 0, '2020-03-05 06:26:44', NULL, 1),
-(4, 'buku ke 1', NULL, 'buku, pertama, satu', NULL, 0, '2020-03-05 06:29:25', NULL, 1),
-(5, 'buku ke 2', NULL, 'buku, kedua, dua', NULL, 0, '2020-03-05 06:31:53', NULL, 1);
+INSERT INTO `task` (`id_task`, `judul`, `authors`, `keywords`, `file_loc`, `page`, `id_editor`, `date_created`, `date_uploaded`, `sts_task`) VALUES
+(7, 'buku', 'bambang', 'baru', '1589325265_05311940000019_Dida_Prasetyo_Rahmat_Kelas_Agama_Kristen_3_Tugas_2.docx', 20, 2, '2020-05-12 23:14:25', '2020-05-12 23:14:25', 0);
 
 -- --------------------------------------------------------
 
@@ -203,6 +241,7 @@ CREATE TABLE `users` (
   `password` varchar(128) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(256) NOT NULL,
+  `photo` varchar(200) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_updated` timestamp NULL DEFAULT NULL,
   `sts_user` tinyint(4) NOT NULL DEFAULT '1'
@@ -212,10 +251,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `nama`, `email`, `date_created`, `date_updated`, `sts_user`) VALUES
-(6, 'didapras', 'abf4b25615c2e7d7d179458bf791e9ba', 'Dida Prasetyo Rahmat', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:16:32', '2020-03-12 06:16:32', 1),
-(7, 'dida', 'b9343bdbf698cbc25b1528b0512e6210', 'Si Dida Lagi', 'didaprasetyorahmat@gmail.com', '2020-03-12 06:53:37', '2020-03-12 06:53:37', 1),
-(11, 'didapras231', 'ef8961d24bdfaff391c292cd82fd3bed', 'dida trus', 'didaprasetyorahmat@gmail.com', '2020-04-15 18:02:02', '2020-04-15 18:02:02', 1);
+INSERT INTO `users` (`id`, `username`, `password`, `nama`, `email`, `photo`, `date_created`, `date_updated`, `sts_user`) VALUES
+(6, 'didapras', 'abf4b25615c2e7d7d179458bf791e9ba', 'Dida Prasetyo Rahmat', 'didaprasetyorahmat@gmail.com', '', '2020-03-12 06:16:32', '2020-03-12 06:16:32', 1),
+(7, 'dida', 'b9343bdbf698cbc25b1528b0512e6210', 'Si Dida Lagi', 'didaprasetyorahmat@gmail.com', '', '2020-03-12 06:53:37', '2020-03-12 06:53:37', 1),
+(11, 'didapras231', 'ef8961d24bdfaff391c292cd82fd3bed', 'dida trus', 'didaprasetyorahmat@gmail.com', '', '2020-04-15 18:02:02', '2020-04-15 18:02:02', 1),
+(12, 'bambang', 'a9711cbb2e3c2d5fc97a63e45bbe5076', 'Si Bambang', 'bambang@bambang.bang', 'bambang.png', '2020-04-27 23:15:04', '2020-04-27 23:15:04', 1),
+(16, 'nurjanah', 'd1828192d6f3a0599e751d35d78807ee', 'si siti', 'nuraeni@ae.com', NULL, '2020-05-07 23:09:34', '2020-05-07 23:09:34', 1),
+(17, 'boss', 'ceb8447cc4ab78d2ec34cd9f11e4bed2', 'jangkrik', 'jangkrik@boss.com', NULL, '2020-05-08 01:31:36', '2020-05-08 01:31:36', 1),
+(18, 'duar', '64089e9dfb3d51ea8e7fd688037fa9f3', 'duar', 'duar@duar.duar', 'duarbambang.png', '2020-05-10 00:53:54', '2020-05-10 00:53:54', 1);
 
 --
 -- Indexes for dumped tables
@@ -283,13 +326,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `assignment`
 --
 ALTER TABLE `assignment`
-  MODIFY `id_assign` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_assign` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `editor`
 --
 ALTER TABLE `editor`
-  MODIFY `id_editor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_editor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `grup`
@@ -307,31 +350,31 @@ ALTER TABLE `makelar`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id_member` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_member` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `reviewer`
 --
 ALTER TABLE `reviewer`
-  MODIFY `id_reviewer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_reviewer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id_task` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_task` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
