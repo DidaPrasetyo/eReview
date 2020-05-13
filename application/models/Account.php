@@ -96,5 +96,23 @@ class Account extends CI_Model {
 		$peran = $res->result_array();
 		return $peran[0]['id_grup'];
 	}
+	function getEIdTask($id){
+		$this->db->select('users.id');
+		$this->db->from('users');
+		$this->db->join('editor', 'editor.id_user = users.id');
+		$this->db->join('task', 'task.id_editor = editor.id_editor');
+		$this->db->join('assignment', 'assignment.id_task = task.id_task');
+		$this->db->where('assignment.id_assign', $id);
+		return $this->db->get()->row()->id;
+	}
+
+	function getRIdTask($id){
+		$this->db->select('users.id');
+		$this->db->from('users');
+		$this->db->join('reviewer', 'reviewer.id_user = users.id');
+		$this->db->join('assignment', 'assignment.id_reviewer = reviewer.id_reviewer');
+		$this->db->where('assignment.id_assign', $id);
+		return $this->db->get()->row()->id;
+	}
 }
 ?>

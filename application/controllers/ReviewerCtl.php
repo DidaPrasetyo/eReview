@@ -22,7 +22,7 @@ class ReviewerCtl extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('Task'));
+		$this->load->model(array('Task','Reviewer','Payment','Account'));
 	}
 
 	public function index()
@@ -53,11 +53,61 @@ class ReviewerCtl extends CI_Controller {
 			redirect('welcome/redirecting');
 		}
 
-		$tasks = $this->Task->getMyAssignment($session_data['id_user']);
+		$tasks = $this->Reviewer->getMyAssignment($session_data['id_user']);
 
 		$this->load->view('reviewer/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		$this->load->view('reviewer/ViewTask_v', array('tasks' => $tasks));
 		$this->load->view('common/content');
 		$this->load->view('common/footer');
+	}
+
+	public function accDc($sts,$id){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'reviewer') {
+			redirect('welcome/redirecting');
+		}
+
+		$this->Reviewer->updateStsAssignment($id,$sts,$session_data['id_user']);
+		if ($sts == 3) {
+			$id_user = $this->Account->getEIdTask($id);
+			$this->Payment->valueIn($id,$id_user);
+		}
+		
+		redirect('ReviewerCtl/viewTask');
+	}
+
+	public function uploadReview($id){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'reviewer') {
+			redirect('welcome/redirecting');
+		}
+
+		$config['upload_path']          = '../../ereview/berkas/reviewed/';
+		$config['allowed_types']        = 'docx|doc|pdf';
+		$config['max_size']             = 10000;
+
+		$new_name = str_replace(' ', '_', time().'_'.$_FILES["berkas".$id]['name']);
+		$config['file_name'] = $new_name;
+
+		$this->upload->initialize($config);
+		if ( ! $this->upload->do_upload('berkas'.$id))
+		{
+			$error = $this->upload->display_errors();
+			echo "<script>alert('".$error."')</script>";
+			return;
+		}
+
+		$data = $this->upload->data();
+		$this->Reviewer->updateStsAssignment($id,4,$session_data['id_user'],$data['file_name']);
+
+		redirect('ReviewerCtl/viewTask');
 	}
 }

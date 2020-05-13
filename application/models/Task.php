@@ -37,15 +37,6 @@ class Task extends CI_Model {
 		return $res;
 	}
 
-	function getMyAssignment($id_user=-1){
-		$id_reviewer = $this->db->select('id_reviewer')->where('id_user', $id_user)->get('reviewer')->row();
-		$id_task = $this->db->select('id_task')->where('id_reviewer', $id_reviewer->id_reviewer)->get('assignment')->row();
-		$this->db->where('id_task', $id_task->id_task);
-		$this->db->where('sts_task', 1);
-		$res = $this->db->get('task');
-		return $res->result_array();
-	}
-
 	function setAssignment($data){
 		$this->db->set('tgl_assign', 'NOW()', FALSE);
 		$this->db->set('date_updated', 'NOW()', FALSE);
@@ -55,5 +46,31 @@ class Task extends CI_Model {
 	function pageTask($id){
 		return $this->db->select('page')->where('id_task', $id)->get('task')->row();
 	}
+
+	function updateAssignment($id_pem,$id,$sts){
+		$this->db->set('status', $sts);
+		$this->db->where('id_assign', $id);
+		$this->db->where('id_pembayaran', $id_pem);
+		$this->db->update('assignment');
+	}
+
+	function updateStsAssignment($id,$sts,$id_rev){
+		$this->db->set('status', $sts);
+		$this->db->where('id_assign', $id);
+		$this->db->where('id_reviewer', $id_rev);
+		$this->db->update('assignment');
+	}
+
+	function getMyAssignment($id){
+		$this->db->select('users.nama, task.judul, assignment.*, reviewer.id_reviewer');
+		$this->db->from('assignment');
+		$this->db->join('task', 'assignment.id_task = task.id_task');
+		$this->db->join('reviewer', 'assignment.id_reviewer = reviewer.id_reviewer');
+		$this->db->join('users', 'reviewer.id_user = users.id');
+		$this->db->where('assignment.id_task', $id);
+		$res = $this->db->get();
+		return $res->result_array();
+	}
+
 }
 ?>

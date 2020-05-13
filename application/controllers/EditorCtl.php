@@ -22,7 +22,7 @@ class EditorCtl extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('Task','Reviewer','Payment'));
+		$this->load->model(array('Task','Reviewer','Payment','Account'));
 	}
 
 	public function index()
@@ -158,14 +158,14 @@ class EditorCtl extends CI_Controller {
 			redirect('welcome/redirecting');
 		}
 
-		$data = $this->Reviewer->getAllReviewers();
+		$data = $this->Reviewer->getAllReviewers($id_task);
 		$page = $this->Task->pageTask($id_task)->page;
 		
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		if ($data->row() == NULL) {
 			$this->load->view('common/message', array('msg' => 'Semua reviewer sudah di pilih untuk task ini'));
 		} else {
-		$this->load->view('editor/selectReviewer', array('reviewer' => $data->result(), 'id_task' => $id_task, 'pageTask' => $page));
+			$this->load->view('editor/selectReviewer', array('reviewer' => $data->result(), 'id_task' => $id_task, 'pageTask' => $page));
 		}
 		$this->load->view('common/content');
 		$this->load->view('common/footer');
@@ -190,21 +190,24 @@ class EditorCtl extends CI_Controller {
 		$date = date('Y-m-d', now());
 		$deadline = date('Y-m-d', strtotime($date. +$page .' days'));
 
-		foreach ($select as $value) {
-			$data = array(
-				'id_task' => $task,
-				'id_reviewer' => $value,
-				'price' => $price,
-				'tgl_deadline' => $deadline
-			);
-			$this->Task->setAssignment($data);
-		}
 		$data2 = array(
 			'id_task' => $task,
 			'amount' => $total,
 			'status' => '0'
 		);
-		$this->Payment->newPayment($data2);
+		$id_pem = $this->Payment->newPayment($data2);
+
+		foreach ($select as $value) {
+			$data = array(
+				'id_task' => $task,
+				'id_reviewer' => $value,
+				'price' => $price,
+				'tgl_deadline' => $deadline,
+				'id_pembayaran' => $id_pem
+			);
+			$this->Task->setAssignment($data);
+		}
+
 		redirect('EditorCtl/viewTask');
 	}
 
@@ -222,7 +225,11 @@ class EditorCtl extends CI_Controller {
 		$payment = $this->Payment->getPaymentTask($id);
 
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
-		$this->load->view('editor/ViewPayment_v', array('payment' => $payment->result(),'error' => $error));
+		if ($payment->row() == NULL) {
+			$this->load->view('common/message', array('msg' => 'Belum ada tagihan untuk saat ini, silahkan pilih reviewer terlebih dahulu'));
+		} else {
+			$this->load->view('editor/ViewPayment_v', array('payment' => $payment->result(),'error' => $error));			
+		}
 		$this->load->view('common/content');
 		$this->load->view('common/footer');
 	}
@@ -254,10 +261,46 @@ class EditorCtl extends CI_Controller {
 
 		$data = $this->upload->data();
 		$this->Payment->updateStsPayment($id,$data['file_name']);
-		$this->Reviewer->updateStsAssignment($id_task);
+		$this->Task->updateAssignment($id,$id_task,7);
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		$this->load->view('editor/Upload_success', array('error' => ''));
 		$this->load->view('common/footer');
 		return;
+	}
+
+	public function assignStatus($id){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'editor') {
+			redirect('welcome/redirecting');
+		}
+
+		$tasks = $this->Task->getMyAssignment($id);
+
+		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
+		$this->load->view('editor/ViewAssign_v', array('tasks' => $tasks));
+		$this->load->view('common/content');
+		$this->load->view('common/footer');
+	}
+
+	public function accDc($sts,$id,$id_rev){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'editor') {
+			redirect('welcome/redirecting');
+		}
+
+		$this->Task->updateStsAssignment($id,$sts,$id_rev);
+		if ($sts == 6) {
+			$id_user = $this->Account->getRIdTask($id);
+			$this->Payment->valueIn($id,$id_user);
+		}
+		redirect('editorCtl/assignStatus/'.$id);
 	}
 }

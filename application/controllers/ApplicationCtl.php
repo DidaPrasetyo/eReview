@@ -21,7 +21,7 @@ class ApplicationCtl extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('Task','Reviewer','Payment'));
+		$this->load->model(array('Task','Reviewer','Payment','Account'));
 	}
 
 
@@ -59,8 +59,43 @@ class ApplicationCtl extends CI_Controller {
 		return;
 	}
 
+	public function downReview($id=0)
+	{
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		$review = $this->Reviewer->getTheReview($id);
+
+		if (sizeof($review)<=0) {
+			return;
+		}
+
+		force_download('../../ereview/berkas/reviewed/'.$review[0]['file'], NULL);
+		return;
+	}
+
 	public function debug(){
-		$sts = $this->Reviewer->updateStsAssignment('5');
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		// $session_data = $this->session->userdata('logged_in');
+		// $id = '10';
+		// $id_user = $this->Account->getEIdTask($id);
+		// var_dump($id_user);
+		// $this->Payment->valueIn($id,$id_user);
+		// var_dump($this->Reviewer->getMyAssignment($session_data['id_user']));
+		// var_dump($this->Reviewer->getAllReviewers('10')->result());
+
+		// $sts = $this->Payment->getPrice('64')->row();
+		// var_dump($sts);
+		// echo "<br>";
+		// echo "<br>";
+		// $array = array('1','2','3');
+		// var_dump($array);
+		// $item['page'] = 20;
+		// echo ($item['page']*10)."$";
 		// var_dump($sts->result());
 		// echo "<br>";
 		// var_dump($sts->result_array());
