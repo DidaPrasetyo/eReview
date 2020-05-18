@@ -43,6 +43,33 @@ class Payment extends CI_Model {
 		$this->db->update('pembayaran');
 	}
 
+	function getAllList(){
+		$this->db->select('pembayaran.*,task.judul,editor.nama');
+		$this->db->from('pembayaran');
+		$this->db->join('task','pembayaran.id_task = task.id_task');
+		$this->db->join('editor','task.id_editor = editor.id_editor');
+		return $this->db->get();
+	}
+
+	function AccDc($sts,$id){
+		$this->db->set('status', $sts);
+		$this->db->where('id_pembayaran', $id);
+		$this->db->update('pembayaran');
+	}
+
+	function getSaldo($id){
+		$this->db->select('total');
+		$this->db->order_by('date','desc')->limit(1);
+		$this->db->where('id_user',$id);
+		$data = $this->db->get('saldo')->row();
+		if ($data == NULL) {
+			$saldo = '0';
+		} else {
+			$saldo = $data->total;
+		}
+		return $saldo;
+	}
+
 	function valueIn($id_assign,$id_user){
 		$assign = $this->db->select('price')->from('assignment')->where('id_assign', $id_assign)->get()->row();
 		$cek = $this->db->select('*')->from('saldo')->where('id_user', $id_user)->order_by('date','DESC')->get()->row();
@@ -58,6 +85,18 @@ class Payment extends CI_Model {
 			$this->db->set('total', $total);
 		}
 		$this->db->insert('saldo');
+	}
+
+	function getMySaldo($id){
+		$this->db->from('saldo');
+		$this->db->where('id_user', $id);
+		return $this->db->get();
+	}
+
+	function getMyPayment($id){
+		$this->db->from('pembayaran');
+		$this->db->where('id_user', $id);
+		return $this->db->get();
 	}
 }
 ?>

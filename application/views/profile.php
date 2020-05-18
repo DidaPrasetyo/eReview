@@ -9,8 +9,11 @@
               <div class="span12">
                 <div class="tagline_text">
                   <h2>Profile Page</h2>
+                  <div>
+                    <button class="btn btn-primary" disabled>Saldo Akun : <?php echo "Rp " . number_format($saldo,2,',','.'); ?></button>
+                    <a href="<?php echo base_url().'AccountCtl/viewSaldo/'.$user['id'] ?>" class="btn">Detail</a>
+                  </div>
                   <p>
-                    Please fill in your account details! Field with <span style="color: red">*</span> is mandatory.
                     <?php if (strlen($error)>0) {
                       echo '<span style="color: red">'.$error.'</span>';
                     } ?>
@@ -55,7 +58,7 @@
                               </tr>
                             </table>
 
-                            <input type="submit" value="Submit">
+                            <button style="float: right;" class="btn" type="submit" value="Submit">Update</button>
                           </form>
                         </td>
                         <td width="34%">

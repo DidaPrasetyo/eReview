@@ -89,4 +89,12 @@
       document.getElementById("kompetensi").style.display='none';
     }
 });
+   document.getElementById("editor").addEventListener("click", function(){
+    var x = document.getElementById("editor").checked;
+    if (x == true) {
+      document.getElementById("norek").style.display='';
+    } else {
+      document.getElementById("norek").style.display='none';
+    }
+});
  </script>

@@ -127,22 +127,9 @@ class EditorCtl extends CI_Controller {
 		}
 
 		$tasks = $this->Task->getMyTask($session_data['id_user']);
-		$sts = $this->Payment->getPayment($tasks->row()->id_task);
-		if ($sts->row() == NULL) {
-			$status = 3;
-		} else {
-			foreach ($sts->result() as $row) {
-				$array[] = $row->status;
-			}
-			if (in_array('0', $array)) {
-				$status = 0;
-			} else {
-				$status = 1;
-			}
-		}
 
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
-		$this->load->view('editor/ViewTask_v', array('tasks' => $tasks->result(), 'status' => $status));
+		$this->load->view('editor/ViewTask_v', array('tasks' => $tasks->result()));
 		$this->load->view('common/content');
 		$this->load->view('common/footer');
 	}
@@ -193,7 +180,8 @@ class EditorCtl extends CI_Controller {
 		$data2 = array(
 			'id_task' => $task,
 			'amount' => $total,
-			'status' => '0'
+			'status' => '0',
+			'id_user' => $session_data['id_user']
 		);
 		$id_pem = $this->Payment->newPayment($data2);
 
@@ -261,7 +249,7 @@ class EditorCtl extends CI_Controller {
 
 		$data = $this->upload->data();
 		$this->Payment->updateStsPayment($id,$data['file_name']);
-		$this->Task->updateAssignment($id,$id_task,7);
+		// $this->Task->updateAssignment($id,$id_task,0);
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		$this->load->view('editor/Upload_success', array('error' => ''));
 		$this->load->view('common/footer');

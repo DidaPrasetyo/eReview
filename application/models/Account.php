@@ -16,6 +16,9 @@ class Account extends CI_Model {
 		$id_user	=	$this->db->insert_id();
 
 		$roles = $this->input->post('roles');
+		if ($roles == NULL) {
+			$roles[] = 3;
+		}
 		foreach ($roles as $item) {
 			$peran	=	$item;
 			if ($peran == 1) {
@@ -25,8 +28,8 @@ class Account extends CI_Model {
 				)";
 				$this->db->query($q2);
 
-				$q3 = "INSERT INTO member (id_user,id_grup,date_updated)VALUES (
-				'". $id_user ."','". $peran ."', now()
+				$q3 = "INSERT INTO member (id_user,no_rek,id_grup,date_updated)VALUES (
+				'". $id_user ."','". $this->input->post('no_rek') ."','". $peran ."', now()
 				)";
 				$this->db->query($q3);
 
@@ -113,6 +116,15 @@ class Account extends CI_Model {
 		$this->db->join('assignment', 'assignment.id_reviewer = reviewer.id_reviewer');
 		$this->db->where('assignment.id_assign', $id);
 		return $this->db->get()->row()->id;
+	}
+
+	function getRole($id){
+		$this->db->select('grup.nama_grup, grup.id_grup, users.id, users.nama, users.username');
+		$this->db->from('grup');
+		$this->db->join('member', 'grup.id_grup = member.id_grup');
+		$this->db->join('users', 'member.id_user = users.id');
+		$this->db->where('member.id_user',$id);
+		return $this->db->get()->result_array();
 	}
 }
 ?>

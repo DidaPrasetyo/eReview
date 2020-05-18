@@ -58,9 +58,6 @@
                     <li><a href="<?php echo base_url()."editorCtl/viewTask"?>">View Task</a></li>
                   </ul>
                 </li>
-                <li>
-                  <a href="contact.html">Contact</a>
-                </li>
                 <li class="dropdown">
                   <a href="#"><?php echo $nama_user;?></a>
                   <ul class="dropdown-menu">

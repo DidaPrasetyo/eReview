@@ -54,6 +54,12 @@ class Task extends CI_Model {
 		$this->db->update('assignment');
 	}
 
+	function updateAssign($sts,$id_pem){
+		$this->db->set('status', $sts);
+		$this->db->where('id_pembayaran', $id_pem);
+		$this->db->update('assignment');
+	}
+
 	function updateStsAssignment($id,$sts,$id_rev){
 		$this->db->set('status', $sts);
 		$this->db->where('id_assign', $id);
@@ -70,6 +76,13 @@ class Task extends CI_Model {
 		$this->db->where('assignment.id_task', $id);
 		$res = $this->db->get();
 		return $res->result_array();
+	}
+
+	function getAllList(){
+		$this->db->select('task.*, editor.nama');
+		$this->db->from('task');
+		$this->db->join('editor', 'task.id_editor = editor.id_editor');
+		return $this->db->get();
 	}
 
 }

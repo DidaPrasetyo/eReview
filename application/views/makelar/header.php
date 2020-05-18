@@ -54,18 +54,15 @@
                 <li class="dropdown">
                   <a href="#">Task</a>
                   <ul class="dropdown-menu">
-                    <li><a href="<?php echo base_url()."makelarCtl/viewNewTask"?>">View New Task</a></li>
-                    <li><a href="<?php echo base_url()."makelarCtl/viewOngoingTask"?>">View Ongoing Task</a></li>
-                    <li><a href="<?php echo base_url()."makelarCtl/viewCompletedTask"?>">View Completed Task</a></li>
+                    <li><a href="<?php echo base_url()."makelarCtl/viewPayment"?>">Payment List</a></li>
+                    <li><a href="<?php echo base_url()."makelarCtl/viewAllTask"?>">Task List</a></li>
+                    <li><a href="<?php echo base_url()."makelarCtl/fundReq"?>">Money Request</a></li>
                   </ul>
-                </li>
-                <li>
-                  <a href="contact.html">Contact</a>
                 </li>
                 <li class="dropdown">
                   <a href="#"><?php echo $nama_user;?></a>
                   <ul class="dropdown-menu">
-                    <li><a href="<?php echo base_url()."accountCtl/changeRole"?>"><?php echo ucwords($current_role);?></a></li>
+                    <li><a href=""><?php echo ucwords($current_role);?></a></li>
                     <li><a href="<?php echo base_url()."accountCtl/profile"?>">Profil</a></li>
                     <li><a href="<?php echo base_url()."accountCtl/logout";?>">Logout</a></li>
                   </ul>

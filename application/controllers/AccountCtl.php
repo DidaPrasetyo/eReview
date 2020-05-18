@@ -22,7 +22,7 @@ class AccountCtl extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(array('Account'));
+		$this->load->model(array('Account','Payment'));
 	}
 
 	public function index()
@@ -91,7 +91,7 @@ class AccountCtl extends CI_Controller {
 		$new_name = $this->input->post('username').$_FILES['photo']['name'];
 		$config['file_name'] = $new_name;
 
-		$this->load->library('upload', $config);
+		$this->upload->initialize($config);
 		if ( ! $this->upload->do_upload('photo'))
 		{
 			$error = array('error' => $this->upload->display_errors());
@@ -127,6 +127,7 @@ class AccountCtl extends CI_Controller {
 		}
 
 		$users = $this->Account->getIdUser();
+		$saldo = $this->Payment->getSaldo($users[0]['id']);
 
 		if (sizeof($users) <= 0) {
 			$this->load->view('common/header');
@@ -140,7 +141,8 @@ class AccountCtl extends CI_Controller {
 				'username'	=> $users[0]['username'],
 				'id_grup'	=> $users[0]['id_grup'],
 				'nama_grup'	=> $users[0]['nama_grup'],
-				'currentgrup'	=> $users[0]['nama_grup']
+				'currentgrup'	=> $users[0]['nama_grup'],
+				'saldo'		=> $saldo
 			);
 			$this->session->set_userdata('logged_in', $sess_array);
 
@@ -170,7 +172,7 @@ class AccountCtl extends CI_Controller {
 		$roles  = $this->Account->getRoles($session_data['id_user']);
 
 		$this->load->view($session_data['nama_grup'].'/header',array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
-		$this->load->view('profile',array('error' => "",'user' => $user[0],'roles' => $roles));
+		$this->load->view('profile',array('error' => "",'user' => $user[0],'roles' => $roles,'saldo' => $session_data['saldo']));
 		$this->load->view('common/footer');
 	}
 
@@ -182,5 +184,54 @@ class AccountCtl extends CI_Controller {
 		$this->session->unset_userdata('logged_in');
 		session_destroy();
 		redirect('welcome');
+	}
+
+	public function changeRole(){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/login');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		$users = $this->Account->getRole($session_data['id_user']);
+		$saldo = $this->Payment->getSaldo($users[0]['id']);
+		if (sizeof($users) == 2) {
+			if ($session_data['id_grup'] == '1') {
+				$data = array(
+					'id_user'	=> $users[1]['id'],
+					'nama'		=> $users[1]['nama'],
+					'username'	=> $users[1]['username'],
+					'id_grup'	=> $users[1]['id_grup'],
+					'nama_grup'	=> $users[1]['nama_grup'],
+					'currentgrup'	=> $users[1]['nama_grup'],
+					'saldo'		=> $saldo
+				);
+			} elseif ($session_data['id_grup'] == '2') {
+				$data = array(
+					'id_user'	=> $users[0]['id'],
+					'nama'		=> $users[0]['nama'],
+					'username'	=> $users[0]['username'],
+					'id_grup'	=> $users[0]['id_grup'],
+					'nama_grup'	=> $users[0]['nama_grup'],
+					'currentgrup'	=> $users[0]['nama_grup'],
+					'saldo'		=> $saldo
+				);
+			}
+			$this->session->set_userdata('logged_in', $data);
+		}
+		redirect('welcome/redirecting');
+	}
+
+	public function viewSaldo($id){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/login');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		$saldo = $this->Payment->getMySaldo($session_data['id_user']);
+		$payment = $this->Payment->getMyPayment($session_data['id_user']);
+
+		$this->load->view($session_data['nama_grup'].'/header',array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
+		$this->load->view('viewSaldo_v',array('saldo' => $saldo->result(),'payment' => $payment->result()));
+		$this->load->view('common/footer');
 	}
 }
