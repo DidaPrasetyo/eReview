@@ -12,6 +12,7 @@
                 <p>
                   You should login to the system before you can submit or review any article.
                 </p>
+                <p style="color: red;"><?php echo $msg; ?></p>
                 <div align="center">
                   <form action="<?php echo base_url()."AccountCtl/checkingLogin"?>" method="post">
 

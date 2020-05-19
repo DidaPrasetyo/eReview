@@ -54,6 +54,14 @@ class ReviewerCtl extends CI_Controller {
 		}
 
 		$tasks = $this->Reviewer->getMyAssignment($session_data['id_user']);
+		
+		if (sizeof($tasks) == 0) {
+			$this->load->view('reviewer/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
+			$this->load->view('reviewer/TaskEmpty');
+			$this->load->view('common/content');
+			$this->load->view('common/footer');
+			return;
+		}
 
 		$this->load->view('reviewer/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		$this->load->view('reviewer/ViewTask_v', array('tasks' => $tasks));
@@ -102,7 +110,7 @@ class ReviewerCtl extends CI_Controller {
 		if ( ! $this->upload->do_upload('berkas'.$id))
 		{
 			$error = $this->upload->display_errors();
-			echo "<script>alert('".$error."')</script>";
+			echo "<script>alert('".$error."'); window.location.href = 'viewTask';</script>";
 			return;
 		}
 

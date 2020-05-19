@@ -15,7 +15,7 @@
           <th width="25%">Keterangan</th>
         </tr>
         <?php if(sizeof($saldo) == 0){
-          echo "Tidak Ada Riwayat Saldo";
+          echo "<p>Tidak Ada Riwayat Saldo</p>";
         } else {
           $i = 0; foreach ($saldo as $row) { $i++;?>
             <tr>
@@ -49,7 +49,7 @@
             <th width="25%">Action</th>
           </tr>
           <?php if(sizeof($payment) == 0){
-            echo "Tidak Ada Riwayat Pembayaran";
+            echo "<p>Tidak Ada Riwayat Pembayaran</p>";
           } else {
             $i = 0; foreach ($payment as $row) { $i++;?>
               <tr>
@@ -86,7 +86,7 @@
               <th width="30%">Bukti Transfer</th>
             </tr>
             <?php if(sizeof($deduct) == 0){
-              echo "Tidak Ada Riwayat Pembayaran";
+              echo "<p>Tidak Ada Riwayat Penarikan</p>";
             }
             $i = 0; foreach ($deduct as $row) { $i++;?>
               <tr>

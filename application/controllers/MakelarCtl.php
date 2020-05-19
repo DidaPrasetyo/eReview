@@ -147,7 +147,7 @@ class MakelarCtl extends CI_Controller {
 		if ( ! $this->upload->do_upload('buktitf'.$id))
 		{
 			$error = $this->upload->display_errors();
-			echo "<script>alert('".$error."')</script>";
+			echo "<script>alert('".$error."'); window.location.href = 'fundReq';</script>";
 			return;
 		}
 

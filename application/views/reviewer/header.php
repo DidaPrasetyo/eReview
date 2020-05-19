@@ -49,17 +49,13 @@
             <nav>
               <ul class="nav topnav">
                 <li class="dropdown active">
-                  <a href="index.html">Home</a>
+                  <a href="<?php echo base_url().'reviewerCtl' ?>">Home</a>
                 </li>
                 <li class="dropdown">
                   <a href="#">Task</a>
                   <ul class="dropdown-menu">
                     <li><a href="<?php echo base_url()."reviewerCtl/viewTask"?>">View Task</a></li>
-                    <li><a href="<?php echo base_url()."reviewerCtl/addTask"?>">View Account</a></li>
                   </ul>
-                </li>
-                <li>
-                  <a href="contact.html">Contact</a>
                 </li>
                 <li class="dropdown">
                   <a href="#"><?php echo $nama_user;?></a>

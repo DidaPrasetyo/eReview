@@ -145,7 +145,7 @@ class EditorCtl extends CI_Controller {
 			redirect('welcome/redirecting');
 		}
 
-		$data = $this->Reviewer->getAllReviewers($id_task);
+		$data = $this->Reviewer->getAllReviewers($id_task,$session_data['id_user']);
 		$page = $this->Task->pageTask($id_task)->page;
 		
 		$this->load->view('editor/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
@@ -243,7 +243,7 @@ class EditorCtl extends CI_Controller {
 		if ( ! $this->upload->do_upload('bukti'.$id))
 		{
 			$error = $this->upload->display_errors();
-			echo "<script>alert('".$error."')</script>";
+			echo "<script>alert('".$error."'); window.location.href = 'listPayment".$id."';</script>";
 			return;
 		}
 

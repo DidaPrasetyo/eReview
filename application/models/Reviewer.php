@@ -18,10 +18,11 @@ class Reviewer extends CI_Model {
 		}
 	}
 
-	function getAllReviewers($id){
+	function getAllReviewers($id,$id_user){
 		$id_rev = $this->getReviewerOnAssign($id);
 		$this->db->from('users');
 		$this->db->join('reviewer', 'reviewer.id_user = users.id');
+		$this->db->where('reviewer.id_user !=',$id_user);
 		if ($id_rev != 0) {
 			$this->db->join('assignment', 'reviewer.id_reviewer = assignment.id_reviewer');
 			$this->db->where_not_in('assignment.id_reviewer', $id_rev);

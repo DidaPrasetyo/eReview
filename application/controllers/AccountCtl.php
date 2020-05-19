@@ -199,7 +199,7 @@ class AccountCtl extends CI_Controller {
 		if ( ! $this->upload->do_upload('photo'))
 		{
 			$error = $this->upload->display_errors();
-			echo "<script>alert('".$error."')</script>";
+			echo "<script>alert('".$error."'); window.location.href = 'profile';</script>";
 			return;
 		}
 
@@ -294,7 +294,7 @@ class AccountCtl extends CI_Controller {
 		if ( ! $this->upload->do_upload('bukti'))
 		{
 			$error = $this->upload->display_errors();
-			echo "<script>alert('".$error."')</script>";
+			echo "<script>alert('".$error."'); window.location.href = 'viewSaldo';</script>";
 			return;
 		}
 
