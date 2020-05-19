@@ -11,7 +11,7 @@
                   <h2>Profile Page</h2>
                   <div>
                     <button class="btn btn-primary" disabled>Saldo Akun : <?php echo "Rp " . number_format($saldo,2,',','.'); ?></button>
-                    <a href="<?php echo base_url().'AccountCtl/viewSaldo/'.$user['id'] ?>" class="btn">Detail</a>
+                    <a href="<?php echo base_url().'AccountCtl/viewSaldo' ?>" class="btn">Detail</a>
                   </div>
                   <p>
                     <?php if (strlen($error)>0) {

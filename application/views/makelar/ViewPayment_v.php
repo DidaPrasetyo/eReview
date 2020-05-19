@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="<?php echo base_url()."assets/css/lightbox.min.css"?>">
 <section id="intro">
   <div class="jumbotron masthead">
     <div class="container">
@@ -45,9 +44,11 @@
             <td style="text-align: center;">
               <?php if ($row->status == 0) {
                 echo "Belum mengupload bukti pembayaran";
-              } else if ($row->status == 2) { ?>
+              } else if ($row->status == 1) { ?>
               <a href="<?php echo base_url(). 'ApplicationCtl/buktiEditor/'.$row->id_pembayaran ?>">->Download Bukti Pembayaran<-</a>
-            <?php } else {
+            <?php } else if ($row->status == 2) {
+              echo "Pembayaran Terverifikasi";
+            } else {
               echo "Menunggu Upload Ulang Bukti Pembayaran";
             } ?>
             </td>
@@ -68,4 +69,3 @@
     </div>
   </div>
 </section>
-<script src="<?php echo base_url()."assets/js/lightbox-plus-jquery.min.js"?>"></script>

@@ -286,8 +286,9 @@ class EditorCtl extends CI_Controller {
 
 		$this->Task->updateStsAssignment($id,$sts,$id_rev);
 		if ($sts == 6) {
+			$ket = 2;
 			$id_user = $this->Account->getRIdTask($id);
-			$this->Payment->valueIn($id,$id_user);
+			$this->Payment->valueIn($id,$id_user,$ket);
 		}
 		redirect('editorCtl/assignStatus/'.$id);
 	}

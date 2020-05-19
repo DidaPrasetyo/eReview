@@ -23,13 +23,13 @@ class Account extends CI_Model {
 			$peran	=	$item;
 			if ($peran == 1) {
 
-				$q2 = "INSERT INTO editor (id_user,nama,date_updated)VALUES (
-				". $id_user .",'". $this->input->post('nama') ."', now()
+				$q2 = "INSERT INTO editor (id_user,no_rek,nama,date_updated)VALUES (
+				". $id_user .",'". $this->input->post('no_rek') ."','". $this->input->post('nama') ."', now()
 				)";
 				$this->db->query($q2);
 
-				$q3 = "INSERT INTO member (id_user,no_rek,id_grup,date_updated)VALUES (
-				'". $id_user ."','". $this->input->post('no_rek') ."','". $peran ."', now()
+				$q3 = "INSERT INTO member (id_user,id_grup,date_updated)VALUES (
+				'". $id_user ."','". $peran ."', now()
 				)";
 				$this->db->query($q3);
 
@@ -58,6 +58,11 @@ class Account extends CI_Model {
 			}
 		}
 		return $id_user;
+	}
+
+	function updateUser($id, $data){
+		$this->db->where('id', $id);
+		$this->db->update('users', $data);
 	}
 
 	function getUser($id_user = -1){
@@ -125,6 +130,17 @@ class Account extends CI_Model {
 		$this->db->join('users', 'member.id_user = users.id');
 		$this->db->where('member.id_user',$id);
 		return $this->db->get()->result_array();
+	}
+
+	function getNoRek($id,$grup){
+		$this->db->select('no_rek');
+		if ($grup == 1) {
+			$this->db->from('editor');
+		} elseif ($grup == 2) {
+			$this->db->from('reviewer');
+		}
+		$this->db->where('id_user', $id);
+		return $this->db->get();
 	}
 }
 ?>

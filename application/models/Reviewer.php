@@ -50,6 +50,12 @@ class Reviewer extends CI_Model {
 		$this->db->update('assignment');
 	}
 
+	function getTheReview($id){
+		$q = "SELECT * FROM assignment WHERE id_assign=".$id;
+		$res = $this->db->query($q);
+		return $res->result_array();
+	}
+
 	function getListReviewer($id){
 		$this->db->select('assignment.status, users.nama');
 		$this->db->from('assignment');

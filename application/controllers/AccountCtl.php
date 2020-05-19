@@ -127,7 +127,7 @@ class AccountCtl extends CI_Controller {
 		}
 
 		$users = $this->Account->getIdUser();
-		$saldo = $this->Payment->getSaldo($users[0]['id']);
+		
 
 		if (sizeof($users) <= 0) {
 			$this->load->view('common/header');
@@ -141,8 +141,7 @@ class AccountCtl extends CI_Controller {
 				'username'	=> $users[0]['username'],
 				'id_grup'	=> $users[0]['id_grup'],
 				'nama_grup'	=> $users[0]['nama_grup'],
-				'currentgrup'	=> $users[0]['nama_grup'],
-				'saldo'		=> $saldo
+				'currentgrup'	=> $users[0]['nama_grup']
 			);
 			$this->session->set_userdata('logged_in', $sess_array);
 
@@ -170,10 +169,51 @@ class AccountCtl extends CI_Controller {
 
 		$user  = $this->Account->getUser($session_data['id_user']);
 		$roles  = $this->Account->getRoles($session_data['id_user']);
+		$saldo = $this->Payment->getSaldo($session_data['id_user']);
 
 		$this->load->view($session_data['nama_grup'].'/header',array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
-		$this->load->view('profile',array('error' => "",'user' => $user[0],'roles' => $roles,'saldo' => $session_data['saldo']));
+		$this->load->view('profile',array('error' => "",'user' => $user[0],'roles' => $roles,'saldo' => $saldo));
 		$this->load->view('common/footer');
+	}
+
+	public function updateProfile(){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/login');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		$nama = $this->input->post('nama');
+		$username = $this->input->post('username');
+		$email = $this->input->post('email');
+
+		$config['upload_path']          = './photos/';
+		$config['allowed_types']        = 'gif|jpg|png';
+		$config['max_size']             = 50;
+		$config['max_width']            = 150;
+		$config['max_height']           = 200;
+
+		$new_name = $this->input->post('username').$_FILES['photo']['name'];
+		$config['file_name'] = $new_name;
+
+		$this->upload->initialize($config);
+		if ( ! $this->upload->do_upload('photo'))
+		{
+			$error = $this->upload->display_errors();
+			echo "<script>alert('".$error."')</script>";
+			return;
+		}
+
+		$data = $this->upload->data();
+		$update = array(
+			'nama' => $nama,
+			'username' => $username,
+			'email' => $email,
+			'photo' => $data['file_name']
+		);
+		$id_user = $this->Account->updateUser($session_data['id_user'],$update);
+
+		redirect('accountCtl/profile');
+
 	}
 
 	public function logout(){
@@ -193,7 +233,6 @@ class AccountCtl extends CI_Controller {
 		$session_data = $this->session->userdata('logged_in');
 
 		$users = $this->Account->getRole($session_data['id_user']);
-		$saldo = $this->Payment->getSaldo($users[0]['id']);
 		if (sizeof($users) == 2) {
 			if ($session_data['id_grup'] == '1') {
 				$data = array(
@@ -202,8 +241,7 @@ class AccountCtl extends CI_Controller {
 					'username'	=> $users[1]['username'],
 					'id_grup'	=> $users[1]['id_grup'],
 					'nama_grup'	=> $users[1]['nama_grup'],
-					'currentgrup'	=> $users[1]['nama_grup'],
-					'saldo'		=> $saldo
+					'currentgrup'	=> $users[1]['nama_grup']
 				);
 			} elseif ($session_data['id_grup'] == '2') {
 				$data = array(
@@ -212,8 +250,7 @@ class AccountCtl extends CI_Controller {
 					'username'	=> $users[0]['username'],
 					'id_grup'	=> $users[0]['id_grup'],
 					'nama_grup'	=> $users[0]['nama_grup'],
-					'currentgrup'	=> $users[0]['nama_grup'],
-					'saldo'		=> $saldo
+					'currentgrup'	=> $users[0]['nama_grup']
 				);
 			}
 			$this->session->set_userdata('logged_in', $data);
@@ -221,7 +258,7 @@ class AccountCtl extends CI_Controller {
 		redirect('welcome/redirecting');
 	}
 
-	public function viewSaldo($id){
+	public function viewSaldo(){
 		if (!$this->session->userdata('logged_in')) {
 			redirect('welcome/login');
 		}
@@ -229,9 +266,69 @@ class AccountCtl extends CI_Controller {
 
 		$saldo = $this->Payment->getMySaldo($session_data['id_user']);
 		$payment = $this->Payment->getMyPayment($session_data['id_user']);
+		$no_rek = $this->Account->getNoRek($session_data['id_user'],$session_data['id_grup']);
+		$akun = $this->Payment->getSaldo($session_data['id_user']);
+		$deduct = $this->Payment->getMyDeduct($session_data['id_user']);
 
 		$this->load->view($session_data['nama_grup'].'/header',array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
-		$this->load->view('viewSaldo_v',array('saldo' => $saldo->result(),'payment' => $payment->result()));
+		$this->load->view('viewSaldo_v',array('saldo' => $saldo->result(),'payment' => $payment->result(),'no_rek' => $no_rek->row(),'akun' => $akun,'deduct' => $deduct->result()));
 		$this->load->view('common/footer');
+	}
+
+	public function isiSaldo(){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/login');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		$jumlah = $this->input->post('jumlah');
+
+		$config['upload_path']          = '../../ereview/bukti/saldo/';
+		$config['allowed_types']        = 'jpg|png';
+		$config['max_size']             = 10000;
+
+		$new_name = str_replace(' ', '_', time().'_'.$_FILES["bukti"]['name']);
+		$config['file_name'] = $new_name;
+
+		$this->upload->initialize($config);
+		if ( ! $this->upload->do_upload('bukti'))
+		{
+			$error = $this->upload->display_errors();
+			echo "<script>alert('".$error."')</script>";
+			return;
+		}
+
+		$data = $this->upload->data();
+		$insert = array(
+			'bukti' => $data['file_name'],
+			'status' => 1,
+			'id_task' => 0,
+			'amount' => $jumlah,
+			'id_user' => $session_data['id_user'],
+			'ket' => 2
+		);
+		$this->Payment->newPayment($insert);
+		redirect('AccountCtl/viewSaldo');
+	}
+
+	public function penarikan(){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/login');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		$jumlah = $this->input->post('jumlah_tarik');
+		$no_rek = $this->input->post('no_rek');
+
+		$data = array(
+			'id_user' => $session_data['id_user'],
+			'status' => 1,
+			'no_rek' => $no_rek,
+			'amount' => $jumlah
+		);
+
+		$this->Payment->newDeduct($data);
+		$this->Payment->saldoOut($jumlah, $session_data['id_user']);
+		redirect('AccountCtl/viewSaldo');
 	}
 }

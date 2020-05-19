@@ -70,8 +70,13 @@ class MakelarCtl extends CI_Controller {
 			redirect('welcome/redirecting');
 		}
 		$this->Payment->AccDc($sts,$id);
-		if ($sts == 2) {
-			$this->Task->updateAssign('1',$id);
+		$pem = $this->Payment->getIfPem($id);
+		if ($pem->id_task != 0) {
+			if ($sts == 2) {
+				$this->Task->updateAssign('1',$id);
+			}
+		} else {
+			$this->Payment->saldoIn($pem->amount, $pem->id_user);
 		}
 		redirect('MakelarCtl/viewPayment');
 	}
@@ -111,5 +116,44 @@ class MakelarCtl extends CI_Controller {
 		$this->load->view('makelar/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
 		$this->load->view('makelar/viewRev_v', array('list' => $reviewer->result(), 'task' => $task));
 		$this->load->view('common/footer');
+	}
+
+	public function fundReq(){
+		if (!$this->session->userdata('logged_in')) {
+			redirect('welcome/index');
+		}
+		$session_data = $this->session->userdata('logged_in');
+
+		if ($session_data['nama_grup'] != 'makelar') {
+			redirect('welcome/redirecting');
+		}
+
+		$list = $this->Payment->getAllReq();
+
+		$this->load->view('makelar/header', array("nama_user" => $session_data['nama'],"current_role" => $session_data['nama_grup']));
+		$this->load->view('makelar/viewReq_v', array('list' => $list->result()));
+		$this->load->view('common/footer');
+	}
+
+	public function fundAcc($id){
+		$config['upload_path']          = '../../ereview/bukti/penarikan/';
+		$config['allowed_types']        = 'jpg|png';
+		$config['max_size']             = 10000;
+
+		$new_name = str_replace(' ', '_', time().'_'.$_FILES["buktitf".$id]['name']);
+		$config['file_name'] = $new_name;
+
+		$this->upload->initialize($config);
+		if ( ! $this->upload->do_upload('buktitf'.$id))
+		{
+			$error = $this->upload->display_errors();
+			echo "<script>alert('".$error."')</script>";
+			return;
+		}
+
+		$data = $this->upload->data();
+		$bukti = $data['file_name'];
+		$this->Payment->updateReq($id, $bukti, 2);
+		redirect('MakelarCtl/fundReq');
 	}
 }

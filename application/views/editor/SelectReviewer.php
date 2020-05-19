@@ -56,11 +56,4 @@
       var y = document.getElementById("price").value;
       document.getElementById("total").value = x*y;
     });
-    document.getElementById("form").addEventListener('submit', (e) => {
-      var x = document.getElementById("page").value;
-      if (x == 0) {
-        alert("Masukkan Jumlah Halaman terlebih dahulu");
-        e.preventDefault()
-      }
-    });
   </script>

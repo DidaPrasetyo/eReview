@@ -73,8 +73,9 @@ class ReviewerCtl extends CI_Controller {
 
 		$this->Reviewer->updateStsAssignment($id,$sts,$session_data['id_user']);
 		if ($sts == 3) {
+			$ket = 1;
 			$id_user = $this->Account->getEIdTask($id);
-			$this->Payment->valueIn($id,$id_user);
+			$this->Payment->valueIn($id,$id_user,$ket);
 		}
 		
 		redirect('ReviewerCtl/viewTask');

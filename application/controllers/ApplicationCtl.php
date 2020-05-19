@@ -80,7 +80,10 @@ class ApplicationCtl extends CI_Controller {
 		if (!$this->session->userdata('logged_in')) {
 			redirect('welcome/index');
 		}
-		var_dump($this->Account->getRole('12'));
+		$session_data = $this->session->userdata('logged_in');
+		// $no = $this->Account->getNoRek('18','2');
+		// var_dump($this->Account->getRole('12'));
+		// var_dump($no);
 		// $this->Payment->AccDc('2','15');
 		// $session_data = $this->session->userdata('logged_in');
 		// $id = '10';
